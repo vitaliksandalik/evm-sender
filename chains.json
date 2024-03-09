@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Ethereum Mainnet",
+    "symbol": "ETH",
+    "chainId": 1,
+    "rpcUrl": "https://ethereum-rpc.publicnode.com"
+  },
+  {
+    "name": "Ethereum Sepolia",
+    "symbol": "ETH",
+    "chainId": 11155111,
+    "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com"
+  },
+  {
+    "name": "BSC Mainnet",
+    "symbol": "tBNB",
+    "chainId": 56,
+    "rpcUrl": "https://bsc-rpc.publicnode.com"
+  },
+  {
+    "name": "BSC Testnet",
+    "symbol": "tBNB",
+    "chainId": 97,
+    "rpcUrl": "https://bsc-testnet-rpc.publicnode.com"
+  },
+  {
+    "name": "Polygon Mainnet",
+    "symbol": "MATIC",
+    "chainId": 137,
+    "rpcUrl": "https://polygon.publicnode.com"
+  },
+  {
+    "name": "Polygon Mumbai",
+    "symbol": "MATIC",
+    "chainId": 80001,
+    "rpcUrl": "https://polygon-mumbai-bor-rpc.publicnode.com"
+  },
+  {
+    "name": "Avalanche C-Chain",
+    "symbol": "AVAX",
+    "chainId": 43114,
+    "rpcUrl": "https://avalanche-c-chain-rpc.publicnode.com"
+  },
+  {
+    "name": "Avalanche Fuji Testnet",
+    "symbol": "AVAX",
+    "chainId": 43113,
+    "rpcUrl": "https://avalanche-fuji-c-chain-rpc.publicnode.com"
+  },
+  {
+    "name": "Fantom Mainnet",
+    "symbol": "FTM",
+    "chainId": 250,
+    "rpcUrl": "https://fantom-rpc.publicnode.com"
+  },
+  {
+    "name": "Fantom Testnet",
+    "symbol": "FTM",
+    "chainId": 4002,
+    "rpcUrl": "https://fantom-testnet-rpc.publicnode.com"
+  },
+  {
+    "name": "Base Mainnet",
+    "symbol": "ETH",
+    "chainId": 8453,
+    "rpcUrl": "https://base-rpc.publicnode.com"
+  },
+  {
+    "name": "Base Sepolia",
+    "symbol": "ETH",
+    "chainId": 84532,
+    "rpcUrl": "https://base-sepolia-rpc.publicnode.com"
+  },
+  {
+    "name": "Arbitrum One",
+    "symbol": "ETH",
+    "chainId": 42161,
+    "rpcUrl": "https://arbitrum-one-rpc.publicnode.com"
+  },
+  {
+    "name": "Arbitrum Sepolia",
+    "symbol": "ETH",
+    "chainId": 421614,
+    "rpcUrl": "https://arbitrum-sepolia-rpc.publicnode.com"
+  },
+  {
+    "name": "OP Mainnet",
+    "symbol": "ETH",
+    "chainId": 10,
+    "rpcUrl": "https://optimism-rpc.publicnode.com"
+  },
+  {
+    "name": "Optimism Sepolia",
+    "symbol": "ETH",
+    "chainId": 11155420,
+    "rpcUrl": "https://optimism-sepolia-rpc.publicnode.com"
+  },
+  {
+    "name": "Blast Mainnet",
+    "symbol": "ETH",
+    "chainId": 81457,
+    "rpcUrl": "https://rpc.blast.io"
+  },
+  {
+    "name": "Blast Sepolia",
+    "symbol": "ETH",
+    "chainId": 168587773,
+    "rpcUrl": "https://sepolia.blast.io"
+  }
+]
