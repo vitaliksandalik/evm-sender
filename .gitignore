@@ -3,4 +3,4 @@ __pycache__/
 .vscode
 .env
 report.log
-
+deployment.log

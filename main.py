@@ -17,6 +17,8 @@ class Sender:
         self.rpc_url = selected_chain_config['rpcUrl']
         self.w3 = Web3(Web3.HTTPProvider(self.rpc_url))
         self.account = self.w3.eth.account.from_key(PRIVATE_KEY)
+        self.nonce = self.w3.eth.get_transaction_count(self.account.address, 'pending')
+        self.remaining_balance = self.w3.eth.get_balance(self.account.address)
         self.load_addresses()
 
     def load_addresses(self):
@@ -28,46 +30,36 @@ class Sender:
             raise
 
     def send_native_currency(self, address, amount):
-        initial_balance = self.w3.eth.get_balance(self.account.address)
-        value = self.w3.to_wei(Decimal(amount), 'ether')
-        gas_price = self.w3.eth.gas_price
-
         try:
-            estimated_gas = self.w3.eth.estimate_gas({
-                'from': self.account.address,
-                'to': address,
-                'value': value,
-            })
+            value = self.w3.to_wei(Decimal(amount), 'ether')
+            gas_price = self.w3.eth.gas_price
+            estimated_gas = self.w3.eth.estimate_gas({'from': self.account.address, 'to': address, 'value': value})
             total_cost = value + (estimated_gas * gas_price)
 
-            if initial_balance < total_cost:
-                self.logger.error(
-                    f"Insufficient funds for transaction to {address}. Transaction aborted."
-                )
+            if self.remaining_balance < total_cost:
+                self.logger.error(f"Insufficient funds for transaction to {address}. Transaction aborted.")
                 return
 
             tx = {
-                'nonce': self.w3.eth.get_transaction_count(self.account.address, 'pending'),
-                'to': address,
-                'value': value,
-                'gasPrice': gas_price,
-                'gas': estimated_gas,
-                'chainId': self.chain_id,
-            }
-
+                    'nonce': self.nonce,
+                    'to': address,
+                    'value': value,
+                    'gasPrice': gas_price,
+                    'gas': estimated_gas,
+                    'chainId': self.chain_id,
+                }
+            
             signed_tx = self.w3.eth.account.sign_transaction(tx, self.account.key)
-            tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction).hex()
-            self.w3.eth.wait_for_transaction_receipt(tx_hash)
+            tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+            receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
 
-            final_balance = self.w3.eth.get_balance(self.account.address)
-            remaining_balance = self.w3.from_wei(final_balance, 'ether')
-
-            self.logger.info(
-                f"Transaction success: {AMOUNT_TO_SEND} {self.currency_symbol} sent to {address} | Tx Hash: {tx_hash}"
-            )
-            self.logger.info(
-                f"Remaining Balance: {remaining_balance} {self.currency_symbol}"
-            )
+            if receipt.status == 1:
+                self.nonce += 1
+                self.remaining_balance -= total_cost
+                self.logger.info(f"Transaction success: {amount} {self.currency_symbol} sent to {address} | Tx Hash: {tx_hash.hex()}")
+                self.logger.info(f"Remaining Balance: {self.w3.from_wei(self.remaining_balance, 'ether')} {self.currency_symbol}")
+            else:
+                self.logger.error(f"Transaction to {address} failed. Tx Hash: {tx_hash.hex()}")
         except Exception as e:
             self.logger.error(f"Error during transaction to {address}: {e}")
 
@@ -77,42 +69,41 @@ class Sender:
             decimals = contract.functions.decimals().call()
             token_symbol = contract.functions.symbol().call()
             token_amount = int(Decimal(amount) * (10 ** decimals))
-
-            initial_balance = self.w3.eth.get_balance(self.account.address)
             gas_price = self.w3.eth.gas_price
-
+            
             tx_dict = {
                 'from': self.account.address,
                 'to': token_contract_address,
                 'data': contract.encodeABI(fn_name='transfer', args=[address, token_amount]),
                 'value': 0,
+                'gasPrice': gas_price,
+                'nonce': self.nonce,
+                'chainId': self.chain_id
             }
 
             estimated_gas = self.w3.eth.estimate_gas(tx_dict)
-            total_cost = estimated_gas * gas_price
+            tx_dict['gas'] = estimated_gas
 
-            if initial_balance < total_cost:
-                self.logger.error(
-                    f"Insufficient ETH for gas to send {amount} {token_symbol} to {address}. Transaction aborted."
-                )
+            if self.w3.eth.get_balance(self.account.address) < estimated_gas * gas_price:
+                self.logger.error("Insufficient ETH for gas. Transaction aborted.")
                 return
-
-            tx_dict.update({
-                'gas': estimated_gas,
-                'gasPrice': gas_price,
-                'nonce': self.w3.eth.get_transaction_count(self.account.address, 'pending'),
-                'chainId': self.chain_id,
-            })
-
+            
+            
             signed_tx = self.w3.eth.account.sign_transaction(tx_dict, self.account.key)
             tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-            self.w3.eth.wait_for_transaction_receipt(tx_hash.hex())
-
-            self.logger.info(
-                f"Token transfer success: {amount} {token_symbol} sent to {address} | Tx Hash: {tx_hash.hex()}"
-            )
+            receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+            
+            if receipt.status == 1:
+                self.nonce += 1
+                token_balance = contract.functions.balanceOf(self.account.address).call()
+                self.remaining_balance -= estimated_gas
+                self.logger.info(f"Token transfer success: {amount} {token_symbol} sent to {address} | Tx Hash: {tx_hash.hex()}")
+                self.logger.info(f"Remaining Balance: {token_balance / (10 ** decimals)} {token_symbol} | {self.w3.from_wei(self.remaining_balance, 'ether')} {self.currency_symbol}")
+            else:
+                self.logger.error(f"Transaction to {address} failed. Tx Hash: {tx_hash.hex()}")
         except Exception as e:
-            self.logger.error(f"Error during token ({token_symbol}) transaction to {address}: {e}")
+            self.logger.error(f"Error during token transaction to {address}: {e}")
+
 
 
 def main():

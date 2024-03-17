@@ -1,6 +1,6 @@
 # **EVM Compatible Chains Transaction Sender Guide**
 
-**Welcome** to the EVM Transaction Sender guide! This document will help you set up and run a Python script to send transactions from one wallet to many wallets. The instructions are designed for users with no prior programming or blockchain experience. Follow the steps closely to ensure a smooth setup on both Windows and Mac operating systems.
+**Welcome** to the EVM Transaction Sender guide! This document will help you set up and run a Python script to send transactions from one wallet to many wallets, as well as deploy your own token on a testnet. The instructions are designed for users with no prior programming or blockchain experience. Follow the steps closely to ensure a smooth setup on both Windows and Mac operating systems.
 
 ## **Prerequisites**
 
@@ -32,6 +32,8 @@ Install the required Python packages by running:
 ```
 pip install -r requirements.txt
 ```
+
+Note: Some users may encounter an issue where the command pip is not recognized. In such cases, please try using pip3 instead. Similarly, if you encounter issues with the python command, use python3 as an alternative.
 
 3. **Configure the Project**
 
@@ -67,6 +69,25 @@ pip install -r requirements.txt
    - Ensure you're in the project's directory in your terminal or command prompt.
    - Run the script by typing: `python main.py`.
    - The script will perform transactions as configured in `config.py` and `addresses.txt`.
+
+### **Deploying on Testnet**
+
+For users interested in deploying their own ERC-20 token to TEST everything on a selected chain (not all chains have token faucets), navigate to the `deploy_testnet` folder. This folder includes:
+
+- **`deploy.py`**: A Python script to compile and deploy your contract.
+- **`Web3Forces.sol`**: A Solidity contract for creating an ERC-20 token. You can adjust the token name, symbol, and supply from the very bottom of the file.
+
+#### Steps for Deployment:
+
+1. **Navigate to the `deploy_testnet` Directory**:
+   ```
+   cd path/to/deploy_testnet
+   ```
+2. **Run the Deployment Script**:
+   ```
+   python deploy.py
+   ```
+   This script compiles `Web3Forces.sol`, deploys it to the specified chain, and logs contract information such as address, name, symbol, and total supply.
 
 ## Safety and Security Tips
 
