@@ -2,6 +2,11 @@
 
 **Welcome** to the EVM Transaction Sender guide! This document will help you set up and run a Python script to send transactions from one wallet to many wallets, as well as deploy your own token on a testnet. The instructions are designed for users with no prior programming or blockchain experience. Follow the steps closely to ensure a smooth setup on both Windows and Mac operating systems.
 
+## Sneak peeks:
+
+<img width="1090" alt="Transaction sending screenshot" src="https://github.com/vitaliksandalik/evm-sender/assets/102806612/e148ff07-f703-4cda-b563-c77882f2e9c7">
+<img width="993" alt="Screenshot 2024-03-27 at 12 56 45" src="https://github.com/vitaliksandalik/evm-sender/assets/102806612/0b58f1b3-4c45-4b05-9704-5a506c62186c">
+
 ## **Prerequisites**
 
 Before starting, make sure you have the following:
