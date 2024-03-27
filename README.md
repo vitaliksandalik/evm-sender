@@ -107,6 +107,6 @@ For users interested in deploying their own ERC-20 token to TEST everything on a
 
 ## Support
 
-If you encounter any issues or have questions, please check the FAQs or contact the support team (provide contact details here).
+If you encounter any issues or have questions, feel free to message me! I have multiple socials in my profile 🔗.
 
-Thank you for using our Web3 project!
+Thank you for using my Web3 project!
